@@ -158,7 +158,7 @@ class VeinsEnv(gym.Env):
         Run one timestep of the environment's dynamics.
         """
         self.socket.send(self._serialize_action(action))
-        observation, reward, done, info = self._parse_request(
+        observation, reward, test, done, info = self._parse_request(
             self._recv_request()
         )
         if done:
@@ -168,7 +168,7 @@ class VeinsEnv(gym.Env):
             logging.debug("Episode ended, waiting for veins to finish")
             self.veins.wait()
         assert self.observation_space.contains(observation)
-        return observation, reward, done, info
+        return observation, reward, test, done, info
 
     def reset(self):
         """
