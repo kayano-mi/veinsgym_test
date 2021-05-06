@@ -53,6 +53,7 @@ void GymConnection::initialize()
 	veinsgym::proto::Request init_request;
 	*(init_request.mutable_init()->mutable_observation_space_code()) = par("observation_space").stdstringValue();
 	*(init_request.mutable_init()->mutable_action_space_code()) = par("action_space").stdstringValue();
+	*(init_request.mutable_init()->mutable_test_space_code()) = par("test_space").stdstringValue();
 	communicate(init_request); // ignore (empty) reply
 }
 
