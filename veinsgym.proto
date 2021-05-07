@@ -55,7 +55,7 @@ message Shutdown { // can be request or reply
 message Step {
   Space observation = 1;
   Space reward = 2;
-  test = 3;
+  Space test = 3;
 }
 
 message Space {
