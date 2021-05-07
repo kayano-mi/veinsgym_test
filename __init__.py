@@ -64,8 +64,7 @@ def launch_veins(scenario_dir, seed, port, extra_args=None):
     """
     command = [
         "./run",
-        #"-uCmdenv",
-        "-uQtenv",
+        "-uCmdenv",
         f"--seed-set={seed}",
         f"--*.manager.seed={seed}",
         f"--*.gym_connection.port={port}",
@@ -158,7 +157,7 @@ class VeinsEnv(gym.Env):
         Run one timestep of the environment's dynamics.
         """
         self.socket.send(self._serialize_action(action))
-        observation, reward, test, done, info = self._parse_request(
+        observation, reward, done, info = self._parse_request(
             self._recv_request()
         )
         if done:
@@ -168,7 +167,7 @@ class VeinsEnv(gym.Env):
             logging.debug("Episode ended, waiting for veins to finish")
             self.veins.wait()
         assert self.observation_space.contains(observation)
-        return observation, reward, test, done, info
+        return observation, reward, done, info
 
     def reset(self):
         """
@@ -308,7 +307,6 @@ class VeinsEnv(gym.Env):
             # parse spaces
             self.action_space = eval(request.init.action_space_code)
             self.observation_space = eval(request.init.observation_space_code)
-            self.test_space = eval(request.init.test_space_code)
             # sent empty reply
             init_msg = veinsgym_pb2.Reply()
             self.socket.send(init_msg.SerializeToString())
@@ -320,14 +318,14 @@ class VeinsEnv(gym.Env):
             return (
                 self._parse_space(real_request.step.observation),
                 self._parse_space(real_request.step.reward),
-                self._parse_space(real_request.step.test),
+                # self._parse_space(real_request.step.test),
                 False,
                 {},
             )
         return (
             self._parse_space(request.step.observation),
             self._parse_space(request.step.reward),
-            self._parse_space(request.step.test),
+            # self._parse_space(request.step.test),
             False,
             {},
         )
